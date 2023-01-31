@@ -1,10 +1,13 @@
+import Card from "./components/Card"
 import GlobalStyles from "./theme/GlobalStyles"
 
 function App() {
   return (
     <div>
       <GlobalStyles />
-      <h1>Crie seu cadastro</h1>
+      <Card>
+        <h1>Crie seu cadastro</h1>
+      </Card>
     </div>
   )
 }
