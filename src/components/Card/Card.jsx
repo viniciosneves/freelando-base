@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 const StyledCard = styled.div`
-    background: #D9D7F4;
+    background: ${props => props.theme.colors.secondary};
     padding: 32px;
 `
 
