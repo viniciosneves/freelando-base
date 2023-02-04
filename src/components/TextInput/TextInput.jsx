@@ -11,6 +11,7 @@ const StyledInput = styled.input`
     height: 40px;
     font-size: 18px;
     margin-top: ${props => props.theme.spacing.xs};
+    margin-bottom: ${props => props.theme.spacing.s};
     padding: ${props => props.theme.spacing.xs};
     background: ${props => props.theme.colors.white};
     border: 1px solid ${props => props.theme.colors.neutral.b};
