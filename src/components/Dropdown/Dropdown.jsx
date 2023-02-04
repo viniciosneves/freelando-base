@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from '@emotion/styled'
 
 const StyleLabel = styled.label({
@@ -28,6 +28,9 @@ const StyledButton = styled.button`
     padding: ${props => props.theme.spacing.s};
     background: ${props => props.theme.colors.white};
     border: 1px solid ${props => props.theme.colors.neutral.b};
+    &:focus {
+        border-color: red;
+    }
 `
 const StyledPlaceholder = styled.span`
     color: ${props => props.theme.colors.neutral.b};
@@ -37,9 +40,7 @@ const StyledDropdownList = styled.ul`
     top: 100%;
     left: 0;
     right: 0;
-    max-height: 200px;
-    overflow-y: auto;
-    background-color: ${props => props.theme.colors.white};;
+            background-color: ${props => props.theme.colors.white};;
     z-index: 1;
     border: 1px solid ${props => props.theme.colors.neutral.b};
     border-bottom-left-radius: 18px;
@@ -54,23 +55,77 @@ const StyledDropdownListItem = styled.li`
     text-align: center;
     border-bottom: 1px solid ${props => props.theme.colors.neutral.c};
     cursor: pointer;
+    color: ${props => props.isFocused ? 'red' : 'inherit'};         
     &:last-child {
         border: none;
     }
 `
 export const Dropdown = ({ label, placeholder, options = [] }) => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(null);
+    const [focusedOption, setFocusedOption] = useState(null);
+
+    const buttonRef = useRef(null)
+
+    const handleKeyDown = (event) => {
+        setIsOpen(true)
+        switch (event.key) {
+            case 'Enter': 
+                event.preventDefault();
+                setSelected(options[focusedOption])
+                setIsOpen(false)
+                buttonRef.current.focus()
+                break;
+            case 'ArrowDown':
+                event.preventDefault();
+                setFocusedOption(oldFocus => {                    
+                    if (oldFocus == null) {
+                        return 0;
+                    }
+                    if (oldFocus == (options.length - 1)) {
+                        return options.length - 1;
+                    }
+                    return oldFocus += 1;
+                })
+                break;
+            case 'ArrowUp':
+                event.preventDefault();
+                setFocusedOption(oldFocus => {
+                    if (!oldFocus) {
+                        return 0;
+                    }
+                    return oldFocus -= 1;
+                })
+                break;
+            case 'Tab':
+                setFocusedOption(null)
+                setIsOpen(false);
+                break;
+            case 'Escape':
+                event.preventDefault();
+                setFocusedOption(null)
+                setIsOpen(false);
+                break;
+            default:
+                break;
+        }
+    }
+
     const handleDropdownButtonClick = () => {
         setIsOpen(!isOpen);
     };
+
     return (
         <StyleLabel>
             {label}
             <StyledButton
-                isOpen={isOpen  }
+                isOpen={isOpen}
                 type="button"
                 onClick={handleDropdownButtonClick}
+                role="button"
+                aria-expanded={isOpen}
+                onKeyDown={handleKeyDown}
+                ref={buttonRef}
             >
                 <div>
                     {selected && <span>
@@ -84,11 +139,15 @@ export const Dropdown = ({ label, placeholder, options = [] }) => {
                     <span>{isOpen ? '▲' : '▼'}</span>
                 </div>
             </StyledButton>
-            {isOpen && <StyledDropdownList>
-                {options.map(option => (
+            {isOpen && <StyledDropdownList role="listbox">
+                {options.map((option, index) => (
                     <StyledDropdownListItem
                         key={option.value}
                         onClick={() => setSelected(option)}
+                        role="option"
+                        aria-selected={selected && selected.value === option.value}
+                        isFocused={focusedOption === index}
+                        id={`dropdown-option-${index}`}
                     >
                         {option.text}
                     </StyledDropdownListItem>

@@ -99,12 +99,12 @@ function App() {
                   </Col>
                 </Row>
                 <Row>
-                  <Col lg={6} md={12} sm={12}>
+                  <Col sm={6}>
                     <Button variant="secondary">
                       Anterior
                     </Button>
                   </Col>
-                  <Col lg={6} md={12} sm={12} style={{ textAlign: 'right' }}>
+                  <Col sm={6} style={{ textAlign: 'right' }}>
                     <Button>
                       Próximo
                     </Button>

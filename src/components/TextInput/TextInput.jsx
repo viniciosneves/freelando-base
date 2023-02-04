@@ -18,6 +18,9 @@ const StyledInput = styled.input`
     border-radius: 18px;
     outline: none;
     box-sizing: border-box;
+    &:focus {
+        border-color: red;
+    }
 `
 
 export const TextInput = ({ label, type }) => {
