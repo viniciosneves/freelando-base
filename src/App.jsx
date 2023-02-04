@@ -70,7 +70,7 @@ function App() {
       </Header>
       <Container style={{ marginTop: '80px', marginBottom: '80px' }}>
         <Row justify="center">
-          <Col lg={6} md={8} sm={12}>
+          <Col lg={8} md={10} sm={12}>
             <Card>
               <form>
                 <StyledTextContainer>

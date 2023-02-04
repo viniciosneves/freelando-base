@@ -3,7 +3,9 @@ import styled from '@emotion/styled'
 
 const StyleLabel = styled.label({
     display: 'block',
-    textAlign: 'left'
+    textAlign: 'left',
+    position: 'relative'
+
 })
 
 const StyledButton = styled.button`
@@ -30,8 +32,35 @@ const StyledButton = styled.button`
 const StyledPlaceholder = styled.span`
     color: ${props => props.theme.colors.neutral.b};
 `
-export const Dropdown = ({ label, placeholder }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const StyledDropdownList = styled.ul`
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: ${props => props.theme.colors.white};;
+    z-index: 1;
+    border: 1px solid ${props => props.theme.colors.neutral.b};
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    border-top: none;
+    margin: 0;
+    padding: 0 ${props => props.theme.spacing.m};
+    list-style: none;
+`
+const StyledDropdownListItem = styled.li`
+    padding: ${props => props.theme.spacing.xs} 0;
+    text-align: center;
+    border-bottom: 1px solid ${props => props.theme.colors.neutral.c};
+    cursor: pointer;
+    &:last-child {
+        border: none;
+    }
+`
+export const Dropdown = ({ label, placeholder, options = [] }) => {
+    const [isOpen, setIsOpen] = useState(true);
+    const [selected, setSelected] = useState(null);
     const handleDropdownButtonClick = () => {
         setIsOpen(!isOpen);
     };
@@ -44,14 +73,27 @@ export const Dropdown = ({ label, placeholder }) => {
                 onClick={handleDropdownButtonClick}
             >
                 <div>
-                    <StyledPlaceholder>
+                    {selected && <span>
+                        {selected.text}
+                    </span>}
+                    {!selected && <StyledPlaceholder>
                         {placeholder}
-                    </StyledPlaceholder>
+                    </StyledPlaceholder>}
                 </div>
                 <div>
                     <span>{isOpen ? '▲' : '▼'}</span>
                 </div>
             </StyledButton>
+            {isOpen && <StyledDropdownList>
+                {options.map(option => (
+                    <StyledDropdownListItem
+                        key={option.value}
+                        onClick={() => setSelected(option)}
+                    >
+                        {option.text}
+                    </StyledDropdownListItem>
+                ))}
+            </StyledDropdownList>}
         </StyleLabel>
     )
 }
